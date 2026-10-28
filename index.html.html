@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQ200 | Информатика — 7-сынып</title>
+<style>
+:root{--bg:#0b1020;--panel:#151d33;--panel2:#1d2945;--text:#edf3ff;--muted:#a9b7d4;--accent:#7c5cff;--accent2:#22d3ee;--good:#27d69b;--bad:#ff6b85}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#202b58 0%,var(--bg) 48%);color:var(--text);font:16px/1.5 Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+header{padding:28px 18px 16px;text-align:center} .logo{display:inline-flex;align-items:center;gap:10px;font-weight:900;letter-spacing:1px;font-size:1.1rem;background:#ffffff12;border:1px solid #ffffff20;padding:9px 15px;border-radius:999px}
+.logo b{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:4px 8px;border-radius:9px}
+h1{font-size:clamp(1.7rem,4vw,2.7rem);line-height:1.1;margin:20px 0 8px}header p{color:var(--muted);margin:0}
+main{width:min(960px,94%);margin:0 auto 50px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:20px 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab,button,select{border:1px solid #ffffff20;background:var(--panel);color:var(--text);border-radius:12px;padding:11px 14px;font:inherit;cursor:pointer}
+.tab.active{background:linear-gradient(135deg,var(--accent),#5144cf);border-color:transparent}.tab:hover,button:hover{filter:brightness(1.13)}
+.status{color:var(--muted);font-size:.95rem}.card{background:linear-gradient(145deg,#18223aee,#11182bea);border:1px solid #ffffff18;border-radius:22px;padding:clamp(18px,4vw,30px);box-shadow:0 18px 55px #0003}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}.pill{font-size:.85rem;padding:5px 10px;border-radius:999px;background:#7c5cff25;color:#cfc5ff;border:1px solid #7c5cff66}
+.progress{height:7px;background:#ffffff12;border-radius:20px;overflow:hidden;margin:10px 0 22px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .25s}
+.question{font-size:1.2rem;font-weight:750;margin:0 0 18px}.answers{display:grid;gap:10px}.answer{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;background:#ffffff07;border:1px solid #ffffff1a;border-radius:14px;cursor:pointer;transition:.15s}.answer:hover{border-color:#8d7cff;background:#7c5cff14}.answer input{accent-color:var(--accent);margin-top:5px;transform:scale(1.15)}.answer.selected{border-color:var(--accent2);background:#22d3ee12}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:24px}.primary{background:linear-gradient(135deg,var(--accent),#5445d6);border:0;font-weight:750}.secondary{background:#ffffff0a}.primary:disabled{opacity:.4;cursor:not-allowed}
+.result{text-align:center;padding:12px 0}.score{font-size:clamp(2.6rem,8vw,4.6rem);font-weight:900;letter-spacing:-2px;background:linear-gradient(120deg,#fff,var(--accent2));color:transparent;background-clip:text}.feedback{color:var(--muted)}.review{margin-top:20px;text-align:left;display:grid;gap:12px}.review-item{padding:14px;border-radius:14px;background:#ffffff08;border:1px solid #ffffff14}.correct{color:var(--good)}.incorrect{color:var(--bad)}.hidden{display:none!important}.foot{text-align:center;color:#7f8eaf;font-size:.85rem;padding:22px}
+@media(max-width:540px){.toolbar{align-items:stretch}.tabs{width:100%}.tab{flex:1;padding:9px 7px}.topline{align-items:flex-start}.nav button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><b>IQ</b> 200 <span>· DIGITAL CLASSROOM</span></div>
+  <h1>Информатика тесті</h1>
+  <p>7-сынып · 4 нұсқа · 10 сұрақ · интерактивті бағалау</p>
+</header>
+<main>
+  <div class="toolbar">
+    <div class="tabs" id="tabs" aria-label="Тест нұсқасын таңдау"></div>
+    <div class="status" id="status">Нұсқаны таңдаңыз</div>
+  </div>
+  <section class="card" id="quiz">
+    <div class="topline"><span class="pill" id="topic">IQ200 • БІЛІМДІ ТЕКСЕРУ</span><span class="status" id="counter">1 / 10</span></div>
+    <div class="progress"><span id="bar"></span></div>
+    <div id="questionArea">
+      <p class="question" id="question"></p>
+      <div class="answers" id="answers"></div>
+      <div class="nav">
+        <button class="secondary" id="prev">← Артқа</button>
+        <button class="primary" id="next">Келесі →</button>
+      </div>
+    </div>
+  </section>
+  <section class="card hidden" id="result"></section>
+  <div class="foot">IQ200 · Оқу мақсатындағы интерактивті тест · Нәтиже осы құрылғыда есептеледі</div>
+</main>
+<script>
+const tests = {
+1:{name:"1-нұсқа",topic:"Ақпарат және компьютер",questions:[
+["Ақпараттың ең кіші өлшем бірлігі қайсы?",["Байт","Бит","Килобайт","Мегабайт"],1],
+["Компьютердің негізгі есептеу құрылғысы:",["Монитор","Пернетақта","Процессор","Принтер"],2],
+["1 байт неше биттен тұрады?",["2","4","8","16"],2],
+["Ақпаратты ұзақ уақыт сақтайтын құрылғыны таңдаңыз.",["Жедел жад (RAM)","SSD диск","Процессор","Кэш"],1],
+["Файл атауындағы .png нені білдіреді?",["Файлдың өлшемін","Файл кеңейтімін","Құпиясөзді","Қапшық атауын"],1],
+["Операциялық жүйенің қызметі қандай?",["Компьютер ресурстарын басқару","Тек мәтін теру","Тек сурет салу","Интернет жылдамдығын арттыру"],0],
+["Қайсысы енгізу құрылғысы?",["Динамик","Монитор","Тінтуір","Проектор"],2],
+["Қауіпсіз құпиясөздің ең дұрыс үлгісі:",["12345678","qwerty","Aruzhan","Q7!mR2#p"],3],
+["Ақпаратты сығудың негізгі мақсаты:",["Файл көлемін азайту","Экранды үлкейту","Процессорды өшіру","Пернетақтаны тазалау"],0],
+["Бұлттық сақтау қызметі не үшін қажет?",["Файлдарды интернет арқылы сақтау және ашу","Компьютерді бояу","Вирус жасау","Экран жарығын өзгерту"],0]]},
+2:{name:"2-нұсқа",topic:"Алгоритм және программалау",questions:[
+["Алгоритм дегеніміз не?",["Компьютер бөлшегі","Мәселені шешуге арналған нақты қадамдар тізбегі","Файл түрі","Интернет желісі"],1],
+["Алгоритмнің қай құрылымы әрекеттерді шартқа қарай таңдайды?",["Сызықтық","Тармақталу","Қайталау","Сақтау"],1],
+["Python тілінде экранға мәтін шығару командасы:",["input()","print()","writefile()","showtext()"],1],
+["x = 5, y = 3 болса, x + y мәні:",["2","8","15","53"],1],
+["Python тілінде теңдікті салыстыру операторы:",["=","==","!=","=>"],1],
+["Алгоритмді блок-схемада бастау/аяқтау үшін жиі қолданылатын пішін:",["Ромб","Тіктөртбұрыш","Сопақша","Үшбұрыш"],2],
+["Қайсысы циклге мысал болады?",["Әрекетті бір рет орындау","Әрекетті бірнеше рет қайталау","Файлды атау","Мониторды қосу"],1],
+["Python тілінде пернетақтадан дерек енгізу функциясы:",["print()","input()","int()","range()"],1],
+["Код нәтижесін табыңыз: print(2 * 4 + 1)",["9","10","12","16"],0],
+["Айнымалы не үшін қолданылады?",["Мәнді сақтау үшін","Экранды өшіру үшін","Желі құру үшін","Файлды басып шығару үшін"],0]]},
+3:{name:"3-нұсқа",topic:"Желі, қауіпсіздік және деректер",questions:[
+["Интернеттегі веб-бетті ашуға арналған бағдарлама:",["Браузер","Компилятор","Калькулятор","Архиватор"],0],
+["URL дегеніміз не?",["Веб-ресурстың мекенжайы","Компьютер жады","Программалау тілі","Құпиясөз түрі"],0],
+["Фишинг дегеніміз:",["Деректерді алдау арқылы ұрлауға бағытталған әрекет","Файлды сығу","Сурет салу","Желі кабелі"],0],
+["Электрондық кестедегі ұяшық мекенжайын таңдаңыз.",["7A","A7","AA-","Ұяшық7"],1],
+["Электрондық кестеде формула қандай таңбадан басталады?",["#","+","=","@"],2],
+["Қайсысы жеке дерекке жатады?",["Жалпы ауа райы болжамы","Үй мекенжайы","Математика формуласы","Ашық энциклопедия мақаласы"],1],
+["Екі факторлы аутентификация не қосады?",["Қосымша растау қадамын","Экран түсін","Файл өлшемін","Интернет кабелін"],0],
+["Жергілікті желінің қысқаша атауы:",["LAN","CPU","HTML","USB"],0],
+["Деректердің сақтық көшірмесі не үшін керек?",["Жоғалған деректерді қалпына келтіру үшін","Компьютерді ауырлату үшін","Құпиясөзді жариялау үшін","Экранды үлкейту үшін"],0],
+["Сенімді сайтты тексерудің пайдалы қадамы:",["Мекенжайын және HTTPS қосылымын тексеру","Барлық сілтемені басу","Құпиясөзді жіберу","Ескертуді елемеу"],0]]},
+4:{name:"4-нұсқа",topic:"Цифрлық сауаттылық және логика",questions:[
+["Компьютерде бірнеше әрекетті автоматтандыруға не көмектеседі?",["Программа","Тінтуір кілемшесі","Динамик","Қапшық түсі"],0],
+["Екілік санау жүйесінде қандай цифрлар қолданылады?",["0 және 1","1 және 2","0–9","A–F"],0],
+["Қай файл кеңейтімі мәтіндік құжатқа жиі тән?",[".mp3",".docx",".png",".mp4"],1],
+["Логикалық AND нәтижесі қашан ақиқат болады?",["Екі шарт та ақиқат болса","Кемінде бір шарт ақиқат болса","Екі шарт та жалған болса","Әрқашан"],0],
+["HTML не үшін қолданылады?",["Веб-беттің құрылымын белгілеу үшін","Компьютерді жөндеу үшін","Дыбысты күшейту үшін","Вирус табу үшін"],0],
+["Веб-беттегі сілтемені жасауға арналған HTML тегі:",["<p>","<a>","<img>","<table>"],1],
+["Құрылғының программалық жасақтамасына не жатады?",["Операциялық жүйе","Монитор","Пернетақта","Принтер қағазы"],0],
+["Қажетсіз немесе зиянды программадан қорғануға көмектеседі:",["Антивирус","Калькулятор","Мәтіндік редактор","Слайд ауысуы"],0],
+["Ақпараттың сенімділігін бағалауда қайсысы маңызды?",["Дереккөзді тексеру","Тек тақырыпқа сену","Бірден тарату","Авторын елемеу"],0],
+["Код нәтижесін табыңыз: print(10 // 3)",["3","3.33","1","10"],0]]}
+};
+let version=1,index=0,answers={},finished=false;
+const $=id=>document.getElementById(id);
+function buildTabs(){ $('tabs').innerHTML=Object.entries(tests).map(([k,t])=>`<button class="tab ${+k===version?'active':''}" data-v="${k}">${t.name}</button>`).join('');document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{version=+b.dataset.v;index=0;answers={};finished=false;$('result').classList.add('hidden');$('quiz').classList.remove('hidden');buildTabs();render()})}
+function render(){
+ const t=tests[version],q=t.questions[index];$('topic').textContent='IQ200 • '+t.topic;$('counter').textContent=`${index+1} / ${t.questions.length}`;$('question').textContent=`${index+1}. ${q[0]}`;$('bar').style.width=`${(index+1)/t.questions.length*100}%`;
+ $('answers').innerHTML=q[1].map((a,i)=>`<label class="answer ${answers[index]===i?'selected':''}"><input type="radio" name="answer" value="${i}" ${answers[index]===i?'checked':''}><span>${String.fromCharCode(65+i)}. ${escapeHtml(a)}</span></label>`).join('');
+ document.querySelectorAll('input[name="answer"]').forEach(r=>r.onchange=()=>{answers[index]=+r.value;render()});
+ $('prev').disabled=index===0;$('next').textContent=index===t.questions.length-1?'Нәтижені көру ✓':'Келесі →';$('status').textContent=`${Object.keys(answers).length} / ${t.questions.length} жауап белгіленді`;
+}
+function escapeHtml(s){return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+$('prev').onclick=()=>{if(index>0){index--;render()}};
+$('next').onclick=()=>{if(index<tests[version].questions.length-1){index++;render()}else showResult()};
+function showResult(){
+ const t=tests[version];let score=0;t.questions.forEach((q,i)=>{if(answers[i]===q[2])score++});
+ $('quiz').classList.add('hidden');const r=$('result');r.classList.remove('hidden');
+ let msg=score>=9?'Керемет нәтиже! 🌟':score>=7?'Жақсы жұмыс! 👏':score>=5?'Жақсы талпыныс! Тағы қайталап көр.':'Қайталап оқып, қайта тапсырып көр!';
+ r.innerHTML=`<div class="result"><span class="pill">${t.name} аяқталды</span><div class="score">${score*10}%</div><h2>${score} / ${t.questions.length} дұрыс жауап</h2><p class="feedback">${msg}</p><button class="primary" id="retry">Қайта тапсыру ↻</button> <button class="secondary" id="change">Басқа нұсқа</button></div><div class="review"><h3>Жауаптарды талдау</h3>${t.questions.map((q,i)=>`<div class="review-item"><strong>${i+1}. ${q[0]}</strong><p class="${answers[i]===q[2]?'correct':'incorrect'}">${answers[i]===q[2]?'✓ Дұрыс':'✗ Қате немесе жауап берілмеген'}</p><div>Дұрыс жауап: <b>${String.fromCharCode(65+q[2])}. ${escapeHtml(q[1][q[2]])}</b></div></div>`).join('')}</div>`;
+ $('retry').onclick=()=>{index=0;answers={};r.classList.add('hidden');$('quiz').classList.remove('hidden');render()};$('change').onclick=()=>{version=version%4+1;index=0;answers={};r.classList.add('hidden');$('quiz').classList.remove('hidden');buildTabs();render()};r.scrollIntoView({behavior:'smooth',block:'start'});
+}
+buildTabs();render();
+</script>
+</body>
+</html>
